@@ -524,7 +524,6 @@ class HomeFragment : Fragment() {
         }
     /////////読み込み処理/////////////
     private fun readFile(){
-
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
@@ -543,7 +542,7 @@ class HomeFragment : Fragment() {
                     var bmp = bitmap as Bitmap
                     saveImage(bmp, "painting.bmp")
                     set_Flag(false)
-                    workBitmap= Bitmap.createBitmap(bitmap!!.width, bitmap!!.height, Bitmap.Config.ARGB_8888)
+                    workBitmap = Bitmap.createBitmap(bitmap!!.width, bitmap!!.height, Bitmap.Config.ARGB_8888)
                     imageView.setImageURI(uri)
                     //画像が読み込まれたときリストを初期化している
                     seedCoordinateList.clear()

@@ -45,7 +45,6 @@
         android:elevation="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/brush"
-        app:layout_constraintBottom_toTopOf="@+id/save_imgButton"
         app:layout_constraintEnd_toStartOf="@+id/eraser_imgButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/eraser_imgButton" />
