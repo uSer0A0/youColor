@@ -11,14 +11,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.bottomnavigation.MainActivity
-import com.example.bottomnavigation.MainActivity.Companion.get_Bitmap
 import com.example.bottomnavigation.MainActivity.Companion.get_drawColorFlag
 import com.example.bottomnavigation.MainActivity.Companion.get_drawEraserFlag
 import com.example.bottomnavigation.MainActivity.Companion.get_drawView
@@ -26,10 +21,7 @@ import com.example.bottomnavigation.MainActivity.Companion.set_drawColorFlag
 import com.example.bottomnavigation.MainActivity.Companion.set_drawEraserFlag
 import com.example.bottomnavigation.MainActivity.Companion.set_drawView
 import com.example.bottomnavigation.R
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.IOException
 
@@ -114,6 +106,38 @@ class DashboardFragment : Fragment() {
             true
         }
 
+        //アンドゥボタンクリック処理
+        view.undo_imgButton.setOnTouchListener(){ v, event ->
+            val action = event.action
+            when(action){
+                MotionEvent.ACTION_DOWN -> {
+                    setScale(view.undo_imgButton)  //リセットボタン縮小・透過
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    paintView.undo()
+                    resetScale(view.undo_imgButton)    //リセットボタン縮小・透過リセット
+                }
+            }
+            true
+        }
+
+        //リドゥボタンクリック処理
+        view.redo_imgButton.setOnTouchListener(){ v, event ->
+            val action = event.action
+            when(action){
+                MotionEvent.ACTION_DOWN -> {
+                    setScale(view.redo_imgButton)  //リセットボタン縮小・透過
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    paintView.redo()
+                    resetScale(view.redo_imgButton)    //リセットボタン縮小・透過リセット
+                }
+            }
+            true
+        }
+
         //ペンの太さ変更処理
         view.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             //値が変更された時に呼ばれる
@@ -133,11 +157,14 @@ class DashboardFragment : Fragment() {
         view.save_imgButton.setOnTouchListener(){ v, event ->
             val action = event.action
             when(action){
-                MotionEvent.ACTION_UP -> {
+                MotionEvent.ACTION_DOWN -> {
                     Log.d("Fragment", "resetButtonTouch")
                     savedFile(paintView.getbitmap())
+                    setScale(view.save_imgButton)  //リセットボタン縮小・透過
                 }
-                else ->{
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.save_imgButton)    //リセットボタン縮小・透過リセット
                 }
             }
             true
@@ -186,9 +213,9 @@ class DashboardFragment : Fragment() {
 
     //ボタン縮小・透過処理
     private fun setScale(view: View) {
-        view.scaleY = 0.88f
-        view.scaleX = 0.92f
-        view.alpha = 0.65f
+        view.scaleY = 0.82f
+        view.scaleX = 0.86f
+        view.alpha = 0.55f
     }
 
     //ボタン縮小・透過リセット処理

@@ -153,8 +153,11 @@ class HomeFragment : Fragment() {
                     }else{
                         savedFile(workBitmap!!)
                     }
+                    setScale(view.saveButton)  //リセットボタン縮小・透過
                 }
-                else ->{
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.saveButton)  //リセットボタン縮小・透過
                 }
             }
             true
@@ -179,8 +182,11 @@ class HomeFragment : Fragment() {
                                 readFile()
                             })
                             .show()
-            }
-                else ->{
+                    setScale(view.readButton)  //リセットボタン縮小・透過
+                 }
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.readButton)
                 }
             }
             true
@@ -468,9 +474,9 @@ class HomeFragment : Fragment() {
 
     //ボタン縮小・透過処理
     private fun setScale(view: View) {
-        view.scaleY = 0.88f
-        view.scaleX = 0.92f
-        view.alpha = 0.65f
+        view.scaleY = 0.82f
+        view.scaleX = 0.86f
+        view.alpha = 0.55f
     }
 
     //ボタン縮小・透過リセット処理

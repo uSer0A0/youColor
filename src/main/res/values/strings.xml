@@ -31,4 +31,6 @@
     <string name="pen_size">Pen size</string>
     <string name="save_image_button">save_button</string>
     <string name="read_image_button">read_button</string>
+    <string name="undo_image_button">undo_button</string>
+    <string name="redo_image_button">redo_button</string>
 </resources>

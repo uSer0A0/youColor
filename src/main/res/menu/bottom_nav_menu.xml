@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="塗り絵" />
+        android:title="ぬりえ" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_newitem_black_24dp"
-        android:title="お絵描き" />
+        android:icon="@drawable/ic_make_black_24dp"
+        android:title="おえかき" />
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_setting_black_24dp"
-        android:title="SNS" />
+        android:icon="@drawable/ic_newitem_black_24dp"
+        android:title="ぎゃらりー" />
 
 </menu>

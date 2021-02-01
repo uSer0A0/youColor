@@ -9,63 +9,70 @@
 
     <ImageButton
         android:id="@+id/change_paint_color_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:elevation="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/brush"
-        app:layout_constraintEnd_toStartOf="@+id/eraser_paint_imgButton"
-        app:layout_constraintTop_toTopOf="@+id/eraser_paint_imgButton" />
+        android:src="@drawable/oekaki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.344"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.889" />
 
     <ImageButton
         android:id="@+id/eraser_paint_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="204dp"
-        android:layout_marginRight="204dp"
-        android:layout_marginBottom="72dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:elevation="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/eraser"
+        android:src="@drawable/kesigomu"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.679"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.889" />
+
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:elevation="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/hozon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/readButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:elevation="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/yomikomi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.783"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="410dp"
         android:layout_height="460dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="200dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:text="@string/save_image_button"
-        app:layout_constraintBottom_toTopOf="@+id/readButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/eraser_paint_imgButton" />
-
-    <Button
-        android:id="@+id/readButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:text="@string/read_image_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.918" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

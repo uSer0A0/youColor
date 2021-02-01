@@ -8,19 +8,19 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.bottomnavigation.ui.home.HomeFragment"
-        android:label="塗り絵"
+        android:label="ぬりえ"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.bottomnavigation.ui.dashboard.DashboardFragment"
-        android:label="お絵描き"
+        android:label="おえかき"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.bottomnavigation.ui.notifications.NotificationsFragment"
-        android:label="SNS"
+        android:label="ぎゃらりー"
         tools:layout="@layout/fragment_notifications" />
 
 </navigation>

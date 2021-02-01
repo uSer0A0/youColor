@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.example.paint.Draw
 import java.util.*
 
@@ -18,7 +19,9 @@ class PaintView : View {
     private var mY: Float = 0F
     private var strokeWidth = BRUSH_SIZE
     private var currentColor = DEFAULT_COLOR
+
     private val paths = ArrayList<Draw>()
+    private val undo = ArrayList<Draw>()
 
     private var image: Bitmap = Bitmap.createBitmap(1140, 1240, Bitmap.Config.ARGB_8888)
 
@@ -72,7 +75,6 @@ class PaintView : View {
             }
             cv.drawPath(draw.path, paint)
         }
-
         canvas.restore()
     }
 
@@ -133,6 +135,16 @@ class PaintView : View {
     //消しゴム機能
     fun erase() {
         currentColor = Color.WHITE  //ペンの色を白に変更
+    }
+
+    fun undo() {
+        undo.add(paths.removeAt(paths.size - 1))
+        invalidate()
+    }
+
+    fun redo() {
+        paths.add(undo.removeAt(undo.size - 1))
+        invalidate()
     }
 
     //ペンの太さ変更
