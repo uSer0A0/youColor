@@ -26,17 +26,20 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
+import com.example.bottomnavigation.MainActivity.Companion.colorList
 import com.example.bottomnavigation.MainActivity.Companion.get_Bitmap
 import com.example.bottomnavigation.MainActivity.Companion.get_Flag
 import com.example.bottomnavigation.MainActivity.Companion.get_paintColorFlag
 import com.example.bottomnavigation.MainActivity.Companion.get_paintEraserFlag
 import com.example.bottomnavigation.MainActivity.Companion.get_paintView
+import com.example.bottomnavigation.MainActivity.Companion.seedCoordinateList
 import com.example.bottomnavigation.MainActivity.Companion.set_Bitmap
 import com.example.bottomnavigation.MainActivity.Companion.set_Flag
 import com.example.bottomnavigation.MainActivity.Companion.set_paintColorFlag
 import com.example.bottomnavigation.MainActivity.Companion.set_paintEraserFlag
 import com.example.bottomnavigation.MainActivity.Companion.set_paintView
-import kotlinx.android.synthetic.main.fragment_dashboard.view.*
+import com.example.bottomnavigation.MainActivity.Companion.undoColorList
+import com.example.bottomnavigation.MainActivity.Companion.undoSeedList
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.android.Utils.bitmapToMat
@@ -58,23 +61,15 @@ class HomeFragment : Fragment() {
     private var defaultColor = 0
     private var count: Int = 0
 
-    //座標・色情報を保持するためのクラス
-    private inner class SeedCoordinate constructor(var cX: Double, var cY: Double)
-    private inner class ColorCoordinate constructor(var red: Double, var green: Double, var blue: Double)
-
     //////////////色変数//////////////
     private var Red = 0.0
     private var Green = 0.0
     private var Blue = 0.0
     //////////////////////////////////
 
-    val RESULT_PICK_IMAGEFILE=1000
+    val RESULT_PICK_IMAGEFILE = 1000
     private var workBitmap: Bitmap? = null //読み込んだ時のBitmap
 
-    //////////////クラス変数をインスタンス生成//////////////
-    private val seedCoordinateList: MutableList<SeedCoordinate> = ArrayList()
-    private val colorList: MutableList<ColorCoordinate> = ArrayList()
-    //////////////////////////////////////////////////////
 
     //必要な変数定義　初期値なし
     companion object {
@@ -119,7 +114,7 @@ class HomeFragment : Fragment() {
         //Fragment切り替え有無判定
         if(get_paintView() == null) {
             r = resources
-            bitmap = BitmapFactory.decodeResource(r, R.drawable.test9)
+            bitmap = BitmapFactory.decodeResource(r, R.drawable.pic4)
             view.imageView.setImageBitmap(bitmap)
             var bmp = bitmap as Bitmap
             saveImage(bmp, "painting.bmp")
@@ -198,7 +193,6 @@ class HomeFragment : Fragment() {
             val action = event.action
             when(action){
                 MotionEvent.ACTION_DOWN ->{
-                    Log.d("Fragment", "changeColorButton")
                     openColourPicker()
                 }
             }
@@ -210,7 +204,6 @@ class HomeFragment : Fragment() {
             val action = event.action
             when(action){
                 MotionEvent.ACTION_UP -> {
-                    Log.d("Fragment", "resetButtonTouch")
                     erase()
 
                     resetScale(view.eraser_paint_imgButton)   //消しゴムボタン縮小・透過
@@ -223,6 +216,58 @@ class HomeFragment : Fragment() {
             }
             true
         }
+
+        view.reset_paint_imgButton.setOnTouchListener() { v, event ->
+            val action = event.action
+            when(action){
+                MotionEvent.ACTION_DOWN -> {
+                    reset()
+                    setting()
+                    painting()
+                    setScale(view.reset_paint_imgButton)
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.reset_paint_imgButton)
+                }
+            }
+            true
+        }
+
+        view.undo_paint_imgButton.setOnTouchListener() { v, event ->
+            val action = event.action
+            when(action){
+                MotionEvent.ACTION_DOWN -> {
+                    undo()
+                    setting()
+                    painting()
+                    setScale(view.undo_paint_imgButton)
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.undo_paint_imgButton)
+                }
+            }
+            true
+        }
+
+        view.redo_paint_imgButton.setOnTouchListener() { v, event ->
+            val action = event.action
+            when(action){
+                MotionEvent.ACTION_DOWN -> {
+                    redo()
+                    setting()
+                    painting()
+                    setScale(view.redo_paint_imgButton)
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    resetScale(view.redo_paint_imgButton)
+                }
+            }
+            true
+        }
+
         Log.d("Fragment", "ViewCreated")
     }
 
@@ -246,13 +291,13 @@ class HomeFragment : Fragment() {
             //res内の情報を変数に格納
             r = resources
             //sampleの部分はdrawable内の画像を指定
-            bitmap = BitmapFactory.decodeResource(r, R.drawable.test9)
+            bitmap = BitmapFactory.decodeResource(r, R.drawable.pic4)
         }else{
             if(get_Flag() != true){
                 //res内の情報を変数に格納
                 r = resources
                 //sampleの部分はdrawable内の画像を指定
-                bitmap = BitmapFactory.decodeResource(r, R.drawable.test9)
+                bitmap = BitmapFactory.decodeResource(r, R.drawable.pic4)
                 workBitmap = Bitmap.createBitmap(bitmap!!.width, bitmap!!.height, Bitmap.Config.ARGB_8888)
 
             }else{
@@ -351,6 +396,28 @@ class HomeFragment : Fragment() {
         setRGB(Red, Green, Blue)
     }
 
+    //リセット処理
+    private fun reset() {
+        seedCoordinateList.clear()
+        colorList.clear()
+    }
+
+    //アンドゥボタン処理
+    private fun undo() {
+        if (seedCoordinateList.size > 0 && colorList.size > 0) {
+            undoSeedList.add(seedCoordinateList.removeAt(seedCoordinateList.size - 1))
+            undoColorList.add(colorList.removeAt(colorList.size - 1))
+        }
+    }
+
+    //リドゥボタン処理
+    private fun redo() {
+        if (undoSeedList.size > 0 && undoColorList.size > 0) {
+            seedCoordinateList.add(undoSeedList.removeAt(undoSeedList.size - 1))
+            colorList.add(undoColorList.removeAt(undoColorList.size - 1))
+        }
+    }
+
     open fun saveImage(bmp:Bitmap, fname:String) {
         try {
             val extStrageDir = Environment.getExternalStorageDirectory()
@@ -386,10 +453,10 @@ class HomeFragment : Fragment() {
         pointY = pointY * bitmap!!.height / imageView.height
 
         //取得した座標をクラス変数に格納する
-        addSeed(SeedCoordinate(pointX, pointY))
+        addSeed(MainActivity.SeedCoordinate(pointX, pointY))
     }
 
-    private fun addSeed(seedCoordinate: SeedCoordinate) {
+    private fun addSeed(seedCoordinate: MainActivity.SeedCoordinate) {
         //SeedCoordinateクラスに座標を格納
         seedCoordinateList.add(seedCoordinate)
     }
@@ -397,14 +464,14 @@ class HomeFragment : Fragment() {
     private fun setRGB(R:Double, G:Double, B:Double){
         if(seedCoordinateList.size == colorList.size){
             //通常の場合
-            setRGB(ColorCoordinate(R,G,B))
+            setRGB(MainActivity.ColorCoordinate(R, G, B))
         } else{
             //色選択ボタンが押されず同じ色を引き続き使う場合
-            colorList[colorList.size-1] = ColorCoordinate(R,G,B)
+            colorList[colorList.size-1] = MainActivity.ColorCoordinate(R, G, B)
         }
     }
 
-    private fun setRGB(colorcoordinate: ColorCoordinate){
+    private fun setRGB(colorcoordinate: MainActivity.ColorCoordinate){
         //カラーリストクラスに色情報を保存
         colorList.add(colorcoordinate)
     }
@@ -416,14 +483,14 @@ class HomeFragment : Fragment() {
                 Red = 0.0
                 Green = 0.0
                 Blue = 0.0
-                setRGB(ColorCoordinate(Red, Green, Blue))
+                setRGB(MainActivity.ColorCoordinate(Red, Green, Blue))
             }
             colorList.size-1 < count -> {
                 //色選択ボタンが押されていないときは1つ前に選択した色を指定する
                 Red = colorList[colorList.size-1].red
                 Green = colorList[colorList.size-1].green
                 Blue = colorList[colorList.size-1].blue
-                setRGB(ColorCoordinate(Red, Green, Blue))
+                setRGB(MainActivity.ColorCoordinate(Red, Green, Blue))
             }
             else -> {
                 //色選択ボタンで押された色にする
@@ -545,11 +612,12 @@ class HomeFragment : Fragment() {
             if (data != null) {
                 uri = data.data;
                 try {
+                    bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
                     var bmp = bitmap as Bitmap
                     saveImage(bmp, "painting.bmp")
-                    set_Flag(false)
+                    set_Flag(true)
                     workBitmap = Bitmap.createBitmap(bitmap!!.width, bitmap!!.height, Bitmap.Config.ARGB_8888)
-                    imageView.setImageURI(uri)
+                    imageView.setImageBitmap(bitmap)
                     //画像が読み込まれたときリストを初期化している
                     seedCoordinateList.clear()
                     colorList.clear()
@@ -559,14 +627,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun getBitmapFromUri(uri: Uri?): Bitmap{
-        val parcelFileDescriptor = activity?.contentResolver?.openFileDescriptor(uri!!, "r")
-        val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
-        val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-        parcelFileDescriptor!!.close()
-        return image
     }
 
 }

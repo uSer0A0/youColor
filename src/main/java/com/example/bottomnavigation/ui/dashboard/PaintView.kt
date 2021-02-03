@@ -130,6 +130,7 @@ class PaintView : View {
     fun clear() {
         paths.clear()
         invalidate()
+        cv.drawColor(Color.WHITE)
     }
 
     //消しゴム機能
@@ -137,14 +138,20 @@ class PaintView : View {
         currentColor = Color.WHITE  //ペンの色を白に変更
     }
 
+    //アンドゥ処理
     fun undo() {
-        undo.add(paths.removeAt(paths.size - 1))
-        invalidate()
+        if (paths.size > 0) {
+            undo.add(paths.removeAt(paths.size - 1))
+            invalidate()
+        }
     }
 
+    //リドゥ処理
     fun redo() {
-        paths.add(undo.removeAt(undo.size - 1))
-        invalidate()
+        if (undo.size > 0) {
+            paths.add(undo.removeAt(undo.size - 1))
+            invalidate()
+        }
     }
 
     //ペンの太さ変更

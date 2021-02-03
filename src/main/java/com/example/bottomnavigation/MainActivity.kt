@@ -16,8 +16,14 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.bottomnavigation.MainActivity.Companion.seedCoordinateList
+import com.example.bottomnavigation.ui.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
+
+    //座標・色情報を保持するためのクラス
+    class SeedCoordinate constructor(var cX: Double, var cY: Double)
+    class ColorCoordinate constructor(var red: Double, var green: Double, var blue: Double)
 
     companion object{
         private var drawView: View? = null
@@ -29,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         private var eraserFlag: Boolean = false
         private var eraserPaintFlag: Boolean = false
         private var setFlag: Boolean = true
+        val seedCoordinateList: MutableList<SeedCoordinate> = ArrayList()
+        val colorList: MutableList<ColorCoordinate> = ArrayList()
+        val undoSeedList: MutableList<SeedCoordinate> = ArrayList()
+        val undoColorList: MutableList<ColorCoordinate> = ArrayList()
 
         fun set_drawView(saveView: View?){
             drawView = saveView
@@ -102,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         fun get_Flag(): Boolean {
             return setFlag
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

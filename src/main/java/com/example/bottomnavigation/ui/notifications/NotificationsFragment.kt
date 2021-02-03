@@ -1,6 +1,9 @@
 package com.example.bottomnavigation.ui.notifications
 
+import android.content.ContentResolver
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -42,20 +45,40 @@ class NotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val animalList = listOf<Animal>(
-            Animal(R.drawable.pen),
-            Animal(R.drawable.raight),
-            Animal(R.drawable.start),
-            Animal(R.drawable.color),
-            Animal(R.drawable.delete),
-            Animal(R.drawable.delete),
-            Animal(R.drawable.delete),
-            Animal(R.drawable.delete),
-            Animal(R.drawable.delete)
-        )
+        //////////画像を取得する処理/////////////
+        val contentResolver: ContentResolver = activity?.contentResolver!!
+        var cursor: Cursor? = null
 
-        view.recycler_view.adapter = CustomAdapter(animalList)
-        view.recycler_view.layoutManager = GridLayoutManager(context, 1, RecyclerView.VERTICAL, false)
+        // 例外を受け取る
+        try {
+            //cursorに端末内のすべての画像のURIを取得する
+            cursor = contentResolver.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null, null, null, null)
+            cursor?.moveToFirst()
+
+            if (cursor != null && cursor.moveToFirst()) {
+                val num = cursor.count - 1
+                var galaly = mutableListOf<String>()
+                for (i in 0..num) {
+                    galaly.add((cursor.getString(cursor.getColumnIndex(
+                            MediaStore.Images.Media.DATA))))
+                    cursor.moveToNext()
+                }
+
+                view.recycler_view.adapter = CustomAdapter(galaly)
+                view.recycler_view.layoutManager = GridLayoutManager(context, 1, RecyclerView.VERTICAL, false)
+
+                cursor.close()
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            //MainActivityに戻す
+        } finally {
+            cursor?.close()
+        }
+
     }
 
     override fun onPause() {
@@ -63,4 +86,5 @@ class NotificationsFragment : Fragment() {
         Log.d("Fragment", "onPause")
         super.onPause()
     }
+
 }
