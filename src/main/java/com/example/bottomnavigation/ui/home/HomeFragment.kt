@@ -173,7 +173,12 @@ class HomeFragment : Fragment() {
                                 readFile()
                             })
                             .setNeutralButton("保存して次へ", { dialog, which ->
-                                savedFile(workBitmap!!)
+
+                                if(get_Flag() == true) {
+                                    savedFile(bitmap!!)
+                                }else{
+                                    savedFile(workBitmap!!)
+                                }
                                 readFile()
                             })
                             .show()
@@ -610,7 +615,7 @@ class HomeFragment : Fragment() {
         if (requestCode == RESULT_PICK_IMAGEFILE && resultCode == AppCompatActivity.RESULT_OK) {
             var uri: Uri? = null
             if (data != null) {
-                uri = data.data;
+                uri = data.data
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
                     var bmp = bitmap as Bitmap
@@ -623,7 +628,7 @@ class HomeFragment : Fragment() {
                     colorList.clear()
 
                 } catch (e: IOException) {
-                    e.printStackTrace();
+                    e.printStackTrace()
                 }
             }
         }

@@ -54,18 +54,23 @@ class NotificationsFragment : Fragment() {
             //cursorに端末内のすべての画像のURIを取得する
             cursor = contentResolver.query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    null, null, null, null)
+                    null,//射影:取得する各行に含まれる列の配列です。
+                    null,//行:行を選択する際の基準を指定します。
+                    null,//?
+                    null//ソート
+            )
             cursor?.moveToFirst()
 
             if (cursor != null && cursor.moveToFirst()) {
                 val num = cursor.count - 1
                 var galaly = mutableListOf<String>()
-                for (i in 0..num) {
-                    galaly.add((cursor.getString(cursor.getColumnIndex(
-                            MediaStore.Images.Media.DATA))))
+                val regex=Regex("Pictures")//部分一致に必要な変数
+                for (i in 0..num) {//画像の枚数文ループ
+                    var test =cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+                    if(regex.containsMatchIn(test))//URIと部分一致比較して、一致したもののみギャラリーリストへ
+                        galaly.add(test)
                     cursor.moveToNext()
                 }
-
                 view.recycler_view.adapter = CustomAdapter(galaly)
                 view.recycler_view.layoutManager = GridLayoutManager(context, 1, RecyclerView.VERTICAL, false)
 
